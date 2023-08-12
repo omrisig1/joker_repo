@@ -1,10 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
     const generateBtn = document.getElementById('generateBtn');
-    const randomStringInput = document.getElementById('randomString');
+    const randomActivityInput = document.getElementById('randomActivity');
 
     generateBtn.addEventListener('click', async () => {
         const response = await fetch('/generate');
         const data = await response.json();
-        randomStringInput.value = data.randomString;
+        const activity = data.activity; // Access the 'activity' property
+        randomActivityInput.value = activity; // Assign the 'activity' value to the input element
     });
 });

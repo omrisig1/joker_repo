@@ -1,4 +1,7 @@
+import axios from "axios";
+
 const express = require('express');
+
 import { Request, Response } from 'express';
 
 const app = express();
@@ -11,20 +14,25 @@ app.get('/', (req: Request, res: Response) => {
     res.render('index');
 });
 
-app.get('/generate', (req: Request, res: Response) => {
-    const randomString = generateRandomString();
-    res.json({ randomString });
+app.get('/generate', async (req: Request, res: Response) => {
+    try {
+        const result = await getActivity();
+        const activity = result["activity"]; // Use a different variable name here
+        res.json({ activity }); // Use the res.json() method to send the activity as JSON
+    } catch (err) {
+        res.json({ error: err }); // Send the error as JSON
+    }
 });
 
-function generateRandomString() {
-    const length = 10;
-    const characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
-    let result = '';
-    for (let i = 0; i < length; i++) {
-        const randomIndex = Math.floor(Math.random() * characters.length);
-        result += characters.charAt(randomIndex);
+
+async function getActivity() {
+    try {
+        const response = await axios.get('https://www.boredapi.com/api/activity');
+        return response.data;
+    } catch (error) {
+        console.error('Error fetching activity:', error);
+        throw error;
     }
-    return result;
 }
 
 app.listen(port, () => {
